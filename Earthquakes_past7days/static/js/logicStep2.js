@@ -109,43 +109,24 @@ L.control.layers(baseMaps).addTo(map);
 //let airportData="https://raw.githubusercontent.com/TAYLORYINGBHANDARI/Mapping_Earthquakes/main/majorAirports.json";
 
 // Create a style for the lines.
-function styleInfo(feature) {
-    return {
-      opacity: 1,
-      fillOpacity: 1,
-      fillColor: "#ffae42",
-      color: "#000000",
-      radius: getRadius(feature.properties.mag),
-      stroke: true,
-      weight: 0.5
-    };
-  };
-// This function determines the radius of the earthquake marker based on its magnitude.
-// Earthquakes with a magnitude of 0 will be plotted with a radius of 1.
-function getRadius(magnitude) {
-    if (magnitude === 0) {
-      return 1;
-    }
-    return magnitude * 4;
-  }
-
+let myStyle = {
+    color: "blue",
+    weight: 1,
+    fillColor:"yellow"
+    
+};
 
 //
 d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson").then(function(data){
     console.log(data);
-    L.geoJson(data,{
-        pointToLayer:function(feature,latlng){
-            console.log(data);
-            return L.circleMarker(latlng);
+    L.geoJson(data,
+        {
+    style:myStyle,
+    onEachFeature: function(feature, layer) {
+                 console.log(layer)
+               layer.bindPopup("<h2>Neighborhood:</h2>"+"<h2>"+feature.properties.AREA_NAME+","+feature.properties.AREA_S_CD+"</h2>")}
+               //layer.bindPopup("<h2>"+feature.properties.AREA_NAME+","+feature.properties.AREA_S_CD+"</h2><hr><h3> id "+feature.properties.id+"</h3>")}
 
-        },
-            
-        style:styleInfo
-    // onEachFeature: function(feature, layer) {
-    //              console.log(layer)
-    //            layer.bindPopup("<h2>Neighborhood:</h2>"+"<h2>"+feature.properties.AREA_NAME+","+feature.properties.AREA_S_CD+"</h2>")}
-    //            //layer.bindPopup("<h2>"+feature.properties.AREA_NAME+","+feature.properties.AREA_S_CD+"</h2><hr><h3> id "+feature.properties.id+"</h3>")}
-
-    }
+}
 ).addTo(map);
 });
